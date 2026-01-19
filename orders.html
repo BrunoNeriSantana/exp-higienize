@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pedidos — Pizzaria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h2>Pedidos</h2>
+    </div>
+  </header>
+  <main class="container">
+    <section class="page-section">
+      <div id="orders-list">
+        <p>Carregando pedidos...</p>
+      </div>
+      <div id="track-area" style="margin-top:12px"></div>
+    </section>
+  </main>
+  <nav class="bottom-nav" role="navigation" aria-label="Navegação inferior">
+    <a class="nav-btn" href="index.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 12v7a1 1 0 0 0 1 1h3v-5h6v5h3a1 1 0 0 0 1-1v-7"/></svg>
+      </span>
+      <span class="label">Home</span>
+    </a>
+    <a class="nav-btn primary" href="orders.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M12 11v6"/></svg>
+      </span>
+      <span class="label">Pedidos</span>
+    </a>
+    <a class="nav-btn" href="profile.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span>
+      <span class="label">Perfil</span>
+    </a>
+  </nav>
+  <script>
+    // render simple orders from localStorage and show tracking if hash present
+    const list = document.getElementById('orders-list');
+    const trackArea = document.getElementById('track-area');
+    const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+    function renderOrders(){
+      if(!orders.length) list.innerHTML = '<p>Você não possui pedidos registrados.</p>';
+      else list.innerHTML = orders.map(o=>`<div class="orders-list order-item" data-id="${o.id}"><strong>Pedido #${o.id}</strong><div>R$ ${o.total.toFixed(2)}</div></div>`).join('');
+      // add click to view tracking
+      document.querySelectorAll('.orders-list.order-item').forEach(el=> el.addEventListener('click', ()=>{
+        const id = el.getAttribute('data-id');
+        showTracking(id);
+      }));
+    }
+
+    function showTracking(id){
+      const order = orders.find(o=>o.id===id);
+      if(!order){ trackArea.innerHTML = '<p>Pedido não encontrado.</p>'; return; }
+      trackArea.innerHTML = `
+        <div class="track-card">
+          <p>Pedido: <strong>#${order.id}</strong></p>
+          <p>Status: <span id="track-status">Recebido</span></p>
+          <div class="track-steps">
+            <div class="step active">Recebido</div>
+            <div class="step">Preparando</div>
+            <div class="step">Saiu para entrega</div>
+            <div class="step">Entregue</div>
+          </div>
+        </div>
+      `;
+      // simulate progress for demo
+      let stepIndex = 0;
+      const steps = trackArea.querySelectorAll('.track-steps .step');
+      const statusEl = document.getElementById('track-status');
+      const interval = setInterval(()=>{
+        if(stepIndex < steps.length -1){
+          stepIndex++;
+          steps.forEach((s,i)=> s.classList.toggle('active', i<=stepIndex));
+          if(statusEl) statusEl.textContent = steps[stepIndex].textContent;
+        } else clearInterval(interval);
+      }, 5000);
+    }
+
+    renderOrders();
+    // if user came with hash, open that tracking
+    if(location.hash){ const id = location.hash.replace('#',''); showTracking(id); }
+  </script>
+</body>
+</html>

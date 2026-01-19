@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pizzaria Delivery — Mobile First</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner header-profile">
+      <div class="header-banner">
+        <div class="header-banner-bg" aria-hidden="true"></div>
+        <div class="profile-card header-profile-card header-card-overlay">
+          <div class="logo" aria-hidden="true">
+            <img src="Logo_pizzaadonai.jpg" alt="Pizzaria Adonai" />
+          </div>
+          <div class="info">
+            <div class="badge">Somente pedidos agendados</div>
+            <div class="name">Pizzaria Adonai</div>
+            <div class="meta-row">
+              <div class="hours">Abre amanhã às 17:00</div>
+              <div class="city">Castro Alves - Ba</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Carrinho removido do cabeçalho conforme solicitado -->
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="search-bar">
+      <input id="search" type="search" placeholder="Buscar pizzas, sabores ou promoções" aria-label="Buscar" />
+      <button id="clear-search" class="btn">Limpar</button>
+    </div>
+    <section class="hero">
+      <h1>Delivery rápido e delicioso</h1>
+      <p>Escolha sua pizza, acompanhe o pedido e receba quentinha em casa.</p>
+    </section>
+
+    <section class="menu">
+      <h2>Mais pedidas</h2>
+      <div class="cards" id="pizzas-list">
+        <!-- Cards serão inseridos por JS -->
+      </div>
+    </section>
+  </main>
+
+  <button class="floating-cart" id="floating-cart">Ver carrinho (<span id="float-count">0</span>)</button>
+
+  <aside class="cart-sheet" id="cart-sheet" aria-hidden="true">
+    <div class="cart-header">
+      <h3>Seu pedido</h3>
+      <button id="close-cart" aria-label="Fechar carrinho">✕</button>
+    </div>
+    <div class="cart-content">
+      <ul class="cart-items" id="cart-items"></ul>
+    </div>
+    <div class="cart-footer">
+      <div class="total">Total: R$ <span id="cart-total">0.00</span></div>
+      <button class="btn primary" id="checkout">Finalizar pedido</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="checkout-modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3>Checkout</h3>
+      <form id="checkout-form">
+        <label>Nome
+          <input type="text" name="name" required>
+        </label>
+        <label>Telefone
+          <input type="tel" name="phone" required>
+        </label>
+        <label>Cidade
+          <select name="city" required>
+            <option value="Castro Alves - Ba">Castro Alves - Ba</option>
+          </select>
+        </label>
+        <div class="address-row">
+          <label class="addr-full">Endereço
+            <input type="text" name="address" placeholder="Rua, Av" required>
+          </label>
+          <label class="addr-number">N
+            <input type="text" name="number" placeholder="Nº" required>
+          </label>
+        </div>
+        <label>Complemento do endereço
+          <input type="text" name="complement" placeholder="Apartamento, bloco, referência (opcional)">
+        </label>
+        <label>Observação do pedido
+          <textarea name="notes" rows="3" placeholder="Ex.: sem cebola, sem queijo"></textarea>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn" id="cancel-checkout">Cancelar</button>
+          <button type="submit" class="btn primary">Próximo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment selection modal -->
+  <div class="modal" id="payment-modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3>Forma de pagamento</h3>
+      <div id="payment-options" class="payment-options">
+        <button class="btn" data-pay="pix">Pix</button>
+        <button class="btn" data-pay="card">Cartão</button>
+        <button class="btn" data-pay="cash">Dinheiro</button>
+      </div>
+      <div id="payment-extra"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn" id="cancel-payment">Cancelar</button>
+        <button type="button" class="btn primary" id="confirm-payment">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order status / PIX modal -->
+  <div class="modal" id="order-modal" aria-hidden="true">
+    <div class="modal-content" id="order-modal-content">
+      <!-- content injected by JS -->
+    </div>
+  </div>
+
+  <!-- Sections moved to separate pages: orders.html and profile.html -->
+
+  <script src="app.js"></script>
+  <nav class="bottom-nav" role="navigation" aria-label="Navegação inferior">
+    <a class="nav-btn" id="nav-home" href="index.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 12v7a1 1 0 0 0 1 1h3v-5h6v5h3a1 1 0 0 0 1-1v-7"/></svg>
+      </span>
+      <span class="label">Home</span>
+    </a>
+    <a class="nav-btn" id="nav-orders" href="orders.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M12 11v6"/></svg>
+      </span>
+      <span class="label">Pedidos</span>
+    </a>
+    <a class="nav-btn" id="nav-profile" href="profile.html">
+      <span class="icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </span>
+      <span class="label">Perfil</span>
+    </a>
+  </nav>
+</body>
+</html>
